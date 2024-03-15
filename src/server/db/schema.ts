@@ -28,7 +28,7 @@ export const dialogueRelations = relations(dialogues, ({ one }) => ({
 export const teamMembers = createTable("team_member", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
   name: text("name", { length: 256 }).notNull(),
-  position: text("position", { length: 256 }).notNull(),
+  type: text("type", { enum: ["employee", "manager", "colleague"] }).notNull(),
   createdAt: int("created_at", { mode: "timestamp" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

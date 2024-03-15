@@ -28,6 +28,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateTeamMember } from "~/hooks/team-member/use-create-team-member";
 import { toast } from "sonner";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { teamMembers } from "~/server/db/schema";
+import { toTitleCase } from "~/lib/utils";
 
 export const CreateTeamMemberDialog = () => {
   const [open, setOpen] = useState(false);
@@ -38,7 +47,6 @@ export const CreateTeamMemberDialog = () => {
     resolver: zodResolver(TeamMemberCreateInput),
     defaultValues: {
       name: "",
-      position: "",
     },
   });
   return (
@@ -89,21 +97,34 @@ export const CreateTeamMemberDialog = () => {
             />
             <FormField
               control={form.control}
-              name="position"
-              render={({ field }) => (
+              name="type"
+              render={({ field: { value, onChange } }) => (
                 <FormItem>
-                  <FormLabel>Position</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <FormControl>
-                    <Input placeholder="E.g. Developer" {...field} />
+                    <Select value={value} onValueChange={onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {teamMembers.type.enumValues.sort().map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {toTitleCase(type)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormDescription>
-                    The position of the team member.
+                    The type of the team member.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Create</Button>
+            <Button className="mt-3" type="submit">
+              Create
+            </Button>
           </form>
         </Form>
       </DialogContent>

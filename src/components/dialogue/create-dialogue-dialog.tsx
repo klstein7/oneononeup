@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
-import { type DialogueCreateInput } from "~/server/api/zod";
+import { DialogueCreateInput } from "~/server/api/zod";
 import {
   Form,
   FormControl,
@@ -21,7 +21,6 @@ import {
   FormItem,
   FormLabel,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { useTeamMembers } from "~/hooks/team-member/use-team-members";
 import {
   Select,
@@ -32,10 +31,14 @@ import {
 } from "../ui/select";
 import { CreateTeamMemberDialog } from "../team-member/create-team-member-dialog";
 import { Textarea } from "../ui/textarea";
+import { toTitleCase } from "~/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const CreateDialogueDialog = () => {
   const teamMembers = useTeamMembers();
-  const form = useForm<z.infer<typeof DialogueCreateInput>>();
+  const form = useForm<z.infer<typeof DialogueCreateInput>>({
+    resolver: zodResolver(DialogueCreateInput),
+  });
 
   console.log(teamMembers.data);
 
@@ -76,7 +79,7 @@ export const CreateDialogueDialog = () => {
                             >
                               <div className="flex items-center gap-3">
                                 <span className="text-xs text-muted-foreground">
-                                  {teamMember.position}
+                                  {toTitleCase(teamMember.type)}
                                 </span>
                                 {teamMember.name}
                               </div>
@@ -113,6 +116,9 @@ export const CreateDialogueDialog = () => {
                 </FormItem>
               )}
             />
+            <Button className="mt-3" type="submit">
+              Create
+            </Button>
           </div>
         </Form>
       </DialogContent>

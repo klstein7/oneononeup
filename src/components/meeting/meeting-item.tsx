@@ -41,9 +41,9 @@ export const MeetingItem = ({
 
   return (
     <AlertDialog>
-      <Collapsible className="rounded bg-secondary/25">
+      <Collapsible className="rounded border bg-secondary/25">
         <CollapsibleTrigger asChild>
-          <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/50">
+          <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
             <MessageSquareText className="h-5 w-5 text-muted-foreground" />
             <div className="flex-1">
               <div className="text-sm">
@@ -87,7 +87,7 @@ export const MeetingItem = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="flex flex-col gap-3 p-3">
-            <NoteList meetingId={meeting.id} initialNotes={meeting.notes} />
+            <NoteList meetingId={meeting.id} />
             <CreateNoteForm meetingId={meeting.id} />
           </div>
         </CollapsibleContent>

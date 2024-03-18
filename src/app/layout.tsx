@@ -42,16 +42,18 @@ export default async function RootLayout({
   });
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="light">
       <body className={font.className}>
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="mx-auto flex h-screen w-full max-w-7xl overflow-hidden p-3">
-              <div className="flex h-full w-80 flex-col gap-3 p-3">
+            <div className="flex h-screen w-full overflow-hidden">
+              <div className="flex h-full w-80 flex-col gap-3 bg-secondary/25 p-3">
                 <CreateDialogueDialog />
                 <DialogueList />
               </div>
-              <main className="flex-1 border-x">{children}</main>
+              <main className="flex-1 overflow-y-auto border-x scrollbar scrollbar-track-background scrollbar-thumb-muted">
+                {children}
+              </main>
               <RightSidebar />
             </div>
             <Toaster />

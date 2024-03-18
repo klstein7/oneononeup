@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { toast } from "sonner";
 import { useDeleteNote } from "~/hooks";
+import { cn } from "~/lib/utils";
 
 export const NoteItem = (
   { note }: { note: API["note"]["find"][number] }
@@ -14,9 +15,10 @@ export const NoteItem = (
   const deleteNoteMutation = useDeleteNote();
 
   return (
-    <div className="flex items-center gap-3 rounded bg-secondary/50 p-3 text-sm justify-between">
+    <div className="flex items-center gap-3 rounded p-3 justify-between">
       <AlertDialog>
-        <div>{note.content}</div>
+        <div className="h-2 w-2 rounded-full bg-muted-foreground" />
+        <div className="text-lg">{note.content}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

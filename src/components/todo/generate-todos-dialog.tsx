@@ -18,8 +18,11 @@ import { useEffect, useState } from "react";
 import { type API } from "~/server/api";
 import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
+  const queryClient = useQueryClient();
+
   const [, setGeneratedTodos] = useAtom(generatedTodosAtom);
   const [selectedMeetings, setSelectedMeetings] = useState<
     API["meeting"]["find"]
@@ -30,6 +33,13 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
   const meetings = useMeetings({ dialogueId });
 
   const generateTodosMutation = useGenerateTodos();
+
+  const getNotesByMeetingId = (meetingId: string) => {
+    return (
+      queryClient.getQueryData<API["note"]["find"]>(["notes", { meetingId }]) ??
+      []
+    );
+  };
 
   useEffect(() => {
     if (!open) {
@@ -84,7 +94,10 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
             onClick={async () => {
               const todos = await generateTodosMutation.mutateAsync({
                 dialogueId,
-                meetings: selectedMeetings,
+                meetings: selectedMeetings.map((m) => ({
+                  ...m,
+                  notes: getNotesByMeetingId(m.id),
+                })),
               });
               setGeneratedTodos(todos);
               setOpen(false);

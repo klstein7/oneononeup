@@ -16,7 +16,7 @@ export const RightSidebar = () => {
   }
 
   return (
-    <div className="flex h-full w-80 flex-col gap-3 p-3">
+    <div className="flex h-full w-96 flex-col gap-3 bg-secondary/25 p-3">
       <div className="flex flex-col gap-1.5 overflow-y-hidden">
         <div className="flex items-center gap-1.5">
           <div className="flex-1">

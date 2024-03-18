@@ -3,7 +3,8 @@
 import { type API } from "~/server/api";
 import moment from "moment";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { cn } from "~/lib/utils";
 
 export const DialogueItem = ({
   dialogue,
@@ -11,9 +12,18 @@ export const DialogueItem = ({
   dialogue: API["dialogue"]["find"][number];
 }) => {
   const router = useRouter();
+  const params = useParams();
+
+  const dialogueId = params.dialogueId as string | undefined;
+
   return (
     <div
-      className="flex cursor-pointer select-none items-center gap-3 rounded-sm border bg-secondary/25 p-3 hover:bg-secondary/40"
+      className={cn(
+        "flex cursor-pointer select-none items-center gap-3 rounded-sm border bg-background p-3 transition-all duration-100 ease-in-out hover:bg-secondary/40",
+        {
+          "border border-foreground/50": dialogueId === dialogue.id,
+        },
+      )}
       onClick={() => {
         router.push(`/d/${dialogue.id}`);
       }}

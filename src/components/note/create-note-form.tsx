@@ -40,7 +40,7 @@ export const CreateNoteForm = ({ meetingId }: { meetingId: string }) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative">
+                <div className="relative bg-background">
                   <Input
                     autoComplete="off"
                     className="pl-9 pr-9"

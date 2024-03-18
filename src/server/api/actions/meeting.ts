@@ -11,9 +11,6 @@ export const find = (input: z.infer<typeof MeetingFindInput>) => {
 
   return db.query.meetings.findMany({
     where: eq(meetings.dialogueId, dialogueId),
-    with: {
-      notes: true,
-    },
   });
 };
 

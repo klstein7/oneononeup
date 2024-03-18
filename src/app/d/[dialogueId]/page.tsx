@@ -35,6 +35,15 @@ export default async function DialoguePage({
     queryFn: () => api.todo.find({ dialogueId }),
   });
 
+  await Promise.all(
+    meetings.map((meeting) => {
+      return queryClient.prefetchQuery({
+        queryKey: ["notes", { meetingId: meeting.id }],
+        queryFn: () => api.note.find({ meetingId: meeting.id }),
+      });
+    }),
+  );
+
   const dialogue = await api.dialogue.get(dialogueId);
 
   return (

@@ -16,7 +16,7 @@ export const NoteList = ({
   return (
     <div className="flex flex-col gap-1.5">
       {notes.data.map((note) => (
-        <NoteItem key={note.id} note={note} />
+        <NoteItem key={note.id} note={note}/>
       ))}
     </div>
   );

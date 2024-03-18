@@ -27,3 +27,19 @@ export const find = async (input: z.infer<typeof NoteFindInput>) => {
     where: eq(notes.meetingId, meetingId),
   });
 };
+
+export const del = async (noteId: string) => {
+  console.log("del:" + noteId);
+  const results = await db
+    .delete(notes)
+    .where(eq(notes.id, noteId))
+    .returning();
+
+  const note = results[0];
+
+  if (!note) {
+    throw new Error("Failed to delete note");
+  }
+
+  return note;
+};

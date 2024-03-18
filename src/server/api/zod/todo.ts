@@ -33,3 +33,7 @@ export const TodoCreateManyInput = z.array(TodoCreateInput);
 export const TodoFindInput = createSelectSchema(todos).pick({
   dialogueId: true,
 });
+
+export const TodoUpdateInput = createSelectSchema(todos).pick({
+  completed: true,
+});

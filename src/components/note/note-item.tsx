@@ -3,34 +3,44 @@
 import { type API } from "~/server/api";
 import { Button } from "../ui";
 import { Ellipsis, Trash } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 import { toast } from "sonner";
 import { useDeleteNote } from "~/hooks";
 import { cn } from "~/lib/utils";
 
-export const NoteItem = (
-  { note }: { note: API["note"]["find"][number] }
-) => {
+export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
   const deleteNoteMutation = useDeleteNote();
 
   return (
-    <div className="flex items-center gap-3 rounded p-3 justify-between">
-      <AlertDialog>
+    <AlertDialog>
+      <div className="flex items-center gap-3 rounded pl-3">
         <div className="h-2 w-2 rounded-full bg-muted-foreground" />
-        <div className="text-lg">{note.content}</div>
+        <div className="flex-1 text-lg">{note.content}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              size="icon"
-              variant="ghost"
-              >
-              <Ellipsis className="h-4 w-4 text-muted-foreground" />
+            <Button size="icon" variant="ghost">
+              <Ellipsis className="h-3.5 w-3.5 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="end">
             <AlertDialogTrigger asChild>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -60,7 +70,7 @@ export const NoteItem = (
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
-    </div>
+      </div>
+    </AlertDialog>
   );
 };

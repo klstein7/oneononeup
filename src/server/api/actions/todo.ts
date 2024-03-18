@@ -7,6 +7,7 @@ import {
   TodoFindInput,
   TodoGenerateInput,
   TodoGenerateOutput,
+  TodoUpdateInput,
 } from "../zod";
 import { ai } from "~/server/integration";
 import { zodToJsonSchema } from "zod-to-json-schema";
@@ -117,4 +118,25 @@ export const find = async (input: z.infer<typeof TodoFindInput>) => {
   return db.query.todos.findMany({
     where: eq(todos.dialogueId, dialogueId),
   });
+};
+
+export const update = async (
+  todoId: string,
+  input: z.infer<typeof TodoUpdateInput>,
+) => {
+  const values = TodoUpdateInput.parse(input);
+
+  const results = await db
+    .update(todos)
+    .set(values)
+    .where(eq(todos.id, todoId))
+    .returning();
+
+  const todo = results[0];
+
+  if (!todo) {
+    throw new Error("Failed to update todo");
+  }
+
+  return todo;
 };

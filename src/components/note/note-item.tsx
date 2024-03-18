@@ -6,7 +6,7 @@ import { Ellipsis, Trash } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { toast } from "sonner";
-import { useDeleteNote } from "~/hooks/note/use-delete-note";
+import { useDeleteNote } from "~/hooks";
 
 export const NoteItem = (
   { note }: { note: API["note"]["find"][number] }

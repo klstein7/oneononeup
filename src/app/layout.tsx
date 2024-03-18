@@ -10,9 +10,8 @@ import {
 } from "@tanstack/react-query";
 import { api } from "~/server/api";
 import { CreateDialogueDialog, DialogueList } from "~/components/dialogue";
-import { Button, Toaster } from "~/components/ui";
-import { Plus } from "lucide-react";
-import { GenerateActionsDialog } from "~/components/action";
+import { Toaster } from "~/components/ui";
+import { RightSidebar } from "~/components/layout";
 
 const font = FontSans({
   subsets: ["latin"],
@@ -53,22 +52,7 @@ export default async function RootLayout({
                 <DialogueList />
               </div>
               <main className="flex-1 border-x">{children}</main>
-              <div className="flex h-full w-80 flex-col gap-3 p-3">
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="flex-1">
-                        <div>Todos</div>
-                      </div>
-                      <GenerateActionsDialog />
-                      <Button variant="ghost" size="sm">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Action
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <RightSidebar />
             </div>
             <Toaster />
           </HydrationBoundary>

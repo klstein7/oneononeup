@@ -87,7 +87,7 @@ export const MeetingItem = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="flex flex-col gap-3 p-3">
-            <NoteList meetingId={meeting.id} />
+            <NoteList meetingId={meeting.id} initialNotes={meeting.notes} />
             <CreateNoteForm meetingId={meeting.id} />
           </div>
         </CollapsibleContent>

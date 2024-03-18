@@ -8,7 +8,9 @@ export const createTable = sqliteTableCreator(
 
 export const dialogues = createTable("dialogue", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
-  teamMemberId: text("team_member_id", { length: 25 }).notNull(),
+  teamMemberId: text("team_member_id", { length: 25 })
+    .references(() => teamMembers.id)
+    .notNull(),
   description: text("description").notNull(),
   createdAt: int("created_at", { mode: "timestamp" })
     .$defaultFn(() => new Date())
@@ -39,7 +41,9 @@ export const teamMembers = createTable("team_member", {
 
 export const meetings = createTable("meeting", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
-  dialogueId: text("dialogue_id", { length: 25 }).notNull(),
+  dialogueId: text("dialogue_id", { length: 25 })
+    .references(() => dialogues.id)
+    .notNull(),
   type: text("type", { enum: ["one-on-one"] }).notNull(),
   description: text("description").default("").notNull(),
   summary: text("summary").default("").notNull(),
@@ -51,9 +55,15 @@ export const meetings = createTable("meeting", {
     .notNull(),
 });
 
+export const meetingRelations = relations(meetings, ({ many }) => ({
+  notes: many(notes),
+}));
+
 export const notes = createTable("note", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
-  meetingId: text("meeting_id", { length: 25 }).notNull(),
+  meetingId: text("meeting_id", { length: 25 })
+    .references(() => meetings.id)
+    .notNull(),
   content: text("content").notNull(),
   createdAt: int("created_at", { mode: "timestamp" })
     .$defaultFn(() => new Date())
@@ -63,16 +73,21 @@ export const notes = createTable("note", {
     .notNull(),
 });
 
-export const actions = createTable("action", {
+export const noteRelations = relations(notes, ({ one }) => ({
+  meeting: one(meetings, {
+    fields: [notes.meetingId],
+    references: [meetings.id],
+  }),
+}));
+
+export const todos = createTable("todo", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
-  dialogueId: text("dialogue_id", { length: 25 }).notNull(),
+  dialogueId: text("dialogue_id", { length: 25 })
+    .references(() => dialogues.id)
+    .notNull(),
   title: text("title", { length: 256 }).notNull(),
   description: text("description").notNull(),
-  status: text("status", {
-    enum: ["active", "completed", "canceled", "postponed", "rescheduled"],
-  })
-    .default("active")
-    .notNull(),
+  completed: int("completed", { mode: "boolean" }).default(false).notNull(),
   createdAt: int("created_at", { mode: "timestamp" })
     .$defaultFn(() => new Date())
     .notNull(),
@@ -81,9 +96,9 @@ export const actions = createTable("action", {
     .notNull(),
 });
 
-export const actionRelations = relations(actions, ({ one }) => ({
+export const todoRelations = relations(todos, ({ one }) => ({
   dialogue: one(dialogues, {
-    fields: [actions.dialogueId],
+    fields: [todos.dialogueId],
     references: [dialogues.id],
   }),
 }));

@@ -1,15 +1,15 @@
 "use server";
 
 import { type z } from "zod";
-import { ActionGenerateInput, ActionGenerateOutput } from "../zod";
+import { TodoGenerateInput, TodoGenerateOutput } from "../zod";
 import { ai } from "~/server/integration";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
 import { dialogues } from "~/server/db/schema";
 
-export const generate = async (input: z.infer<typeof ActionGenerateInput>) => {
-  const { notes, dialogueId } = ActionGenerateInput.parse(input);
+export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
+  const { meetings, dialogueId } = TodoGenerateInput.parse(input);
 
   const dialogue = await db.query.dialogues.findFirst({
     where: eq(dialogues.id, dialogueId),
@@ -26,7 +26,7 @@ export const generate = async (input: z.infer<typeof ActionGenerateInput>) => {
 
   console.log("Team member", teamMember);
 
-  console.log("Generating action items based on notes", notes);
+  console.log("Generating todo items based on meetings", meetings);
 
   const response = await ai.chat.completions.create({
     model: "gpt-4-turbo-preview",
@@ -34,29 +34,29 @@ export const generate = async (input: z.infer<typeof ActionGenerateInput>) => {
       {
         role: "system",
         content: `
-        Your job is to assist the user in generating action items based on the notes from a selection of meetings.
-        The action items should be actionable and specific.
-        The name of the team member is ${teamMember.name}.
-        The relation to the team member is ${teamMember.type}.
+        Your job is to assist the user in generating todo items based on the notes from a selection of meetings.
+        The todo items should be actionable and specific.
+        The name of the team member is: ${teamMember.name}.
+        The relation of the team member to me is: ${teamMember.type}.
         Here are the notes from the meetings (in JSON format):
-        ${JSON.stringify(notes, null, 2)}
+        ${JSON.stringify(meetings, null, 2)}
       `,
       },
     ],
     tool_choice: {
       type: "function",
       function: {
-        name: "generate_action_items",
+        name: "generate_todo_items",
       },
     },
     tools: [
       {
         type: "function",
         function: {
-          name: "generate_action_items",
+          name: "generate_todo_items",
           description:
-            "Generates action items based on the notes from a selection of meetings.",
-          parameters: zodToJsonSchema(ActionGenerateOutput),
+            "Generates todo items based on the notes from a selection of meetings.",
+          parameters: zodToJsonSchema(TodoGenerateOutput),
         },
       },
     ],
@@ -67,14 +67,18 @@ export const generate = async (input: z.infer<typeof ActionGenerateInput>) => {
   const toolCalls = response.choices[0]?.message.tool_calls;
 
   if (!toolCalls) {
-    throw new Error("Failed to generate action items");
+    throw new Error("Failed to generate todo items");
   }
 
   console.log("Tool calls", toolCalls);
 
-  toolCalls.forEach((toolCall) => {
-    if (toolCall.function.name === "generate_action_items") {
-      console.log(toolCall.function.arguments);
+  return toolCalls.map((toolCall) => {
+    if (toolCall.function.name === "generate_todo_items") {
+      const { todos } = TodoGenerateOutput.parse(
+        JSON.parse(toolCall.function.arguments),
+      );
+      return todos;
     }
+    return [];
   });
 };

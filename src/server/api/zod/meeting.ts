@@ -1,6 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { meetings } from "~/server/db/schema";
 
+export const Meeting = createSelectSchema(meetings);
+
 export const MeetingFindInput = createSelectSchema(meetings).pick({
   dialogueId: true,
 });

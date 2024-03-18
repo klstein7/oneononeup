@@ -1,13 +1,22 @@
 import "~/styles/globals.css";
 
-import { Inter } from "next/font/google";
-import { Sidebar } from "~/components/ui/sidebar";
+import { Jost as FontSans } from "next/font/google";
 import { Providers } from "./providers";
-import { Toaster } from "~/components/ui/sonner";
 
-const inter = Inter({
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+import { api } from "~/server/api";
+import { CreateDialogueDialog, DialogueList } from "~/components/dialogue";
+import { Button, Toaster } from "~/components/ui";
+import { Plus } from "lucide-react";
+import { GenerateActionsDialog } from "~/components/action";
+
+const font = FontSans({
   subsets: ["latin"],
-  variable: "--font-sans",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata = {
@@ -16,20 +25,53 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["team-members"],
+    queryFn: () => api.teamMember.find(),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["dialogues"],
+    queryFn: () => api.dialogue.find(),
+  });
+
   return (
     <html lang="en" className="dark">
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={font.className}>
         <Providers>
-          <div className="flex h-screen">
-            <Sidebar />
-            <main className="flex-1">{children}</main>
-          </div>
-          <Toaster />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <div className="mx-auto flex h-screen w-full max-w-7xl p-3">
+              <div className="flex h-full w-80 flex-col gap-3 p-3">
+                <CreateDialogueDialog />
+                <DialogueList />
+              </div>
+              <main className="flex-1 border-x">{children}</main>
+              <div className="flex h-full w-80 flex-col gap-3 p-3">
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="flex-1">
+                        <div>Todos</div>
+                      </div>
+                      <GenerateActionsDialog />
+                      <Button variant="ghost" size="sm">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Action
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <Toaster />
+          </HydrationBoundary>
         </Providers>
       </body>
     </html>

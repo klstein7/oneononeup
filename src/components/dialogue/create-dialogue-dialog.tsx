@@ -20,8 +20,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "../ui/form";
-import { useTeamMembers } from "~/hooks/team-member/use-team-members";
+import { useCreateDialogue, useTeamMembers } from "~/hooks";
 import {
   Select,
   SelectContent,
@@ -34,18 +35,27 @@ import { Textarea } from "../ui/textarea";
 import { toTitleCase } from "~/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { useState } from "react";
+import { toast } from "sonner";
+
 export const CreateDialogueDialog = () => {
+  const [open, setOpen] = useState(false);
+
   const teamMembers = useTeamMembers();
+
+  const createDialogueMutation = useCreateDialogue();
+
   const form = useForm<z.infer<typeof DialogueCreateInput>>({
     resolver: zodResolver(DialogueCreateInput),
+    defaultValues: {
+      description: "",
+    },
   });
 
-  console.log(teamMembers.data);
-
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="w-full">
           <Plus className="mr-2 h-4 w-4" />
           Dialogue
         </Button>
@@ -58,7 +68,15 @@ export const CreateDialogueDialog = () => {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <div className="flex flex-col gap-3">
+          <form
+            className="flex flex-col gap-3"
+            onSubmit={form.handleSubmit(async (values) => {
+              await createDialogueMutation.mutateAsync(values);
+              toast.success("Dialogue created successfully!");
+              form.reset();
+              setOpen(false);
+            })}
+          >
             <FormField
               control={form.control}
               name="teamMemberId"
@@ -93,6 +111,7 @@ export const CreateDialogueDialog = () => {
                   <FormDescription>
                     The team member you have a dialogue with.
                   </FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -113,13 +132,14 @@ export const CreateDialogueDialog = () => {
                   <FormDescription>
                     The description of the dialogue.
                   </FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
             <Button className="mt-3" type="submit">
               Create
             </Button>
-          </div>
+          </form>
         </Form>
       </DialogContent>
     </Dialog>

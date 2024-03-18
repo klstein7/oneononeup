@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -25,7 +24,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateTeamMember } from "~/hooks/team-member/use-create-team-member";
+
 import { toast } from "sonner";
 import { useState } from "react";
 import {
@@ -37,6 +36,7 @@ import {
 } from "../ui/select";
 import { teamMembers } from "~/server/db/schema";
 import { toTitleCase } from "~/lib/utils";
+import { useCreateTeamMember } from "~/hooks";
 
 export const CreateTeamMemberDialog = () => {
   const [open, setOpen] = useState(false);
@@ -86,7 +86,11 @@ export const CreateTeamMemberDialog = () => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="E.g. Kyle" {...field} />
+                    <Input
+                      autoComplete="off"
+                      placeholder="E.g. Kyle"
+                      {...field}
+                    />
                   </FormControl>
                   <FormDescription>
                     The name of the team member.

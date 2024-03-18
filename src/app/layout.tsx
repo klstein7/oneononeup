@@ -46,7 +46,7 @@ export default async function RootLayout({
       <body className={font.className}>
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="mx-auto flex h-screen w-full max-w-7xl p-3">
+            <div className="mx-auto flex h-screen w-full max-w-7xl overflow-hidden p-3">
               <div className="flex h-full w-80 flex-col gap-3 p-3">
                 <CreateDialogueDialog />
                 <DialogueList />

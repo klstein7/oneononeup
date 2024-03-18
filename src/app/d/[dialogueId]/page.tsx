@@ -3,13 +3,10 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
 import moment from "moment";
 import { unstable_noStore as noStore } from "next/cache";
 import { CreateMeetingDialog, MeetingList } from "~/components/meeting";
-import { Button } from "~/components/ui";
 import { Badge } from "~/components/ui/badge";
-import { Separator } from "~/components/ui/separator";
 import { toTitleCase } from "~/lib/utils";
 
 import { api } from "~/server/api";
@@ -31,6 +28,11 @@ export default async function DialoguePage({
     queryKey: ["meetings", { dialogueId }],
     queryFn: () => api.meeting.find({ dialogueId }),
     initialData: meetings,
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["todos", { dialogueId }],
+    queryFn: () => api.todo.find({ dialogueId }),
   });
 
   const dialogue = await api.dialogue.get(dialogueId);

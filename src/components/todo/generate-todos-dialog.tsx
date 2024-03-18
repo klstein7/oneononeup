@@ -14,19 +14,30 @@ import { useGenerateTodos, useMeetings } from "~/hooks";
 import moment from "moment";
 import { Checkbox } from "../ui/checkbox";
 import { Badge } from "../ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type API } from "~/server/api";
+import { useAtom } from "jotai";
+import { generatedTodosAtom } from "~/atoms";
 
 export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
+  const [, setGeneratedTodos] = useAtom(generatedTodosAtom);
   const [selectedMeetings, setSelectedMeetings] = useState<
     API["meeting"]["find"]
   >([]);
 
+  const [open, setOpen] = useState(false);
+
   const meetings = useMeetings({ dialogueId });
 
   const generateTodosMutation = useGenerateTodos();
+
+  useEffect(() => {
+    if (!open) {
+      setSelectedMeetings([]);
+    }
+  }, [open]);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="sm">
           <Sparkles className="mr-2 h-4 w-4" />
@@ -75,7 +86,8 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
                 dialogueId,
                 meetings: selectedMeetings,
               });
-              console.log(todos);
+              setGeneratedTodos(todos);
+              setOpen(false);
             }}
           >
             Generate

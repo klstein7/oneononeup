@@ -1,9 +1,10 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { GenerateTodosDialog } from "../todo";
+import { GenerateTodosDialog, TodoList } from "../todo";
 import { Button } from "../ui";
 import { useParams } from "next/navigation";
+import { SelectGeneratedTodosDialog } from "../todo/select-generated-todos-dialog";
 
 export const RightSidebar = () => {
   const params = useParams();
@@ -16,7 +17,7 @@ export const RightSidebar = () => {
 
   return (
     <div className="flex h-full w-80 flex-col gap-3 p-3">
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5 overflow-y-hidden">
         <div className="flex items-center gap-1.5">
           <div className="flex-1">
             <div>Todos</div>
@@ -24,9 +25,11 @@ export const RightSidebar = () => {
           <GenerateTodosDialog dialogueId={dialogueId} />
           <Button variant="ghost" size="sm">
             <Plus className="mr-2 h-4 w-4" />
-            Action
+            Todo
           </Button>
         </div>
+        <TodoList />
+        <SelectGeneratedTodosDialog dialogueId={dialogueId} />
       </div>
     </div>
   );

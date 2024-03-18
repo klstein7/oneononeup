@@ -1,12 +1,18 @@
 "use server";
 
 import { type z } from "zod";
-import { TodoGenerateInput, TodoGenerateOutput } from "../zod";
+import {
+  TodoCreateInput,
+  TodoCreateManyInput,
+  TodoFindInput,
+  TodoGenerateInput,
+  TodoGenerateOutput,
+} from "../zod";
 import { ai } from "~/server/integration";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
-import { dialogues } from "~/server/db/schema";
+import { dialogues, todos } from "~/server/db/schema";
 
 export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
   const { meetings, dialogueId } = TodoGenerateInput.parse(input);
@@ -28,6 +34,10 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
 
   console.log("Generating todo items based on meetings", meetings);
 
+  const currentTodos = await db.query.todos.findMany({
+    where: eq(todos.dialogueId, dialogueId),
+  });
+
   const response = await ai.chat.completions.create({
     model: "gpt-4-turbo-preview",
     messages: [
@@ -38,8 +48,15 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
         The todo items should be actionable and specific.
         The name of the team member is: ${teamMember.name}.
         The relation of the team member to me is: ${teamMember.type}.
+        IMPORTANT: When possible, try to combine notes into a singular actionable todo item.
+
         Here are the notes from the meetings (in JSON format):
         ${JSON.stringify(meetings, null, 2)}
+
+        Here are the current todo items (in JSON format):
+        ${JSON.stringify(currentTodos, null, 2)}
+
+        IMPORTANT: Do not generate todos if an existing todo item already exists with the same intent.
       `,
       },
     ],
@@ -72,13 +89,32 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
 
   console.log("Tool calls", toolCalls);
 
-  return toolCalls.map((toolCall) => {
+  for (const toolCall of toolCalls) {
     if (toolCall.function.name === "generate_todo_items") {
       const { todos } = TodoGenerateOutput.parse(
         JSON.parse(toolCall.function.arguments),
       );
       return todos;
     }
-    return [];
+  }
+
+  return [];
+};
+
+export const createMany = async (
+  input: z.infer<typeof TodoCreateManyInput>,
+) => {
+  const values = TodoCreateManyInput.parse(input);
+
+  console.log(values);
+
+  return db.insert(todos).values(values).returning();
+};
+
+export const find = async (input: z.infer<typeof TodoFindInput>) => {
+  const { dialogueId } = TodoFindInput.parse(input);
+
+  return db.query.todos.findMany({
+    where: eq(todos.dialogueId, dialogueId),
   });
 };

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Note } from "./note";
-import { createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { todos } from "~/server/db/schema";
 import { Meeting } from ".";
 
@@ -20,4 +20,16 @@ export const TodoGenerateInput = z.object({
 
 export const TodoGenerateOutput = z.object({
   todos: z.array(Todo),
+});
+
+export const TodoCreateInput = createInsertSchema(todos).pick({
+  title: true,
+  description: true,
+  dialogueId: true,
+});
+
+export const TodoCreateManyInput = z.array(TodoCreateInput);
+
+export const TodoFindInput = createSelectSchema(todos).pick({
+  dialogueId: true,
 });

@@ -46,6 +46,9 @@ export const MeetingItem = ({
           <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
             <MessageSquareText className="h-5 w-5 text-muted-foreground" />
             <div className="flex-1">
+              <div className="text-lg font-medium">
+                {meeting.description}
+              </div>
               <div className="text-sm">
                 {moment(meeting.createdAt).format("MMM D, YYYY, h:mm A")}
               </div>

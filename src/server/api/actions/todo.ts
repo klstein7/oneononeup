@@ -102,6 +102,22 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
   return [];
 };
 
+export const create = async (
+  input: z.infer<typeof TodoCreateInput>
+) => {
+  const value = TodoCreateInput.parse(input);
+
+  const results = await db.insert(todos).values(value).returning();
+
+  const todo = results[0];
+
+  if(!todo){
+    throw new Error("Failed to create todo");
+  }
+
+  return todo;
+}
+
 export const createMany = async (
   input: z.infer<typeof TodoCreateManyInput>,
 ) => {

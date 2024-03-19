@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { GenerateTodosDialog, TodoList } from "../todo";
+import { CreateTodosDialog, GenerateTodosDialog, TodoList } from "../todo";
 import { Button } from "../ui";
 import { useParams } from "next/navigation";
 import { SelectGeneratedTodosDialog } from "../todo/select-generated-todos-dialog";
@@ -23,10 +23,7 @@ export const RightSidebar = () => {
             <div>Todos</div>
           </div>
           <GenerateTodosDialog dialogueId={dialogueId} />
-          <Button variant="ghost" size="sm">
-            <Plus className="mr-2 h-4 w-4" />
-            Todo
-          </Button>
+          <CreateTodosDialog dialogueId={dialogueId} />
         </div>
         <TodoList />
         <SelectGeneratedTodosDialog dialogueId={dialogueId} />

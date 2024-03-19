@@ -22,7 +22,6 @@ import {
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
 import { useDeleteNote } from "~/hooks";
-import { cn } from "~/lib/utils";
 
 export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
   const deleteNoteMutation = useDeleteNote();

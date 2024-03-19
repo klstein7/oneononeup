@@ -36,10 +36,14 @@ export default async function DialoguePage({
   });
 
   await Promise.all(
-    meetings.map((meeting) => {
-      return queryClient.prefetchQuery({
+    meetings.map(async (meeting) => {
+      await queryClient.prefetchQuery({
         queryKey: ["notes", { meetingId: meeting.id }],
         queryFn: () => api.note.find({ meetingId: meeting.id }),
+      });
+      await queryClient.prefetchQuery({
+        queryKey: ["topic-suggestions", { meetingId: meeting.id }],
+        queryFn: () => api.topicSuggestion.find({ meetingId: meeting.id }),
       });
     }),
   );

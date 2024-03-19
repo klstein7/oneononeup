@@ -39,8 +39,6 @@ export const MeetingItem = ({
 }) => {
   const deleteMeetingMutation = useDeleteMeeting();
 
-  console.log(meeting.topicSuggestions);
-
   return (
     <AlertDialog>
       <Collapsible className="rounded border bg-secondary/25">
@@ -89,7 +87,7 @@ export const MeetingItem = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="flex flex-col gap-3 p-3">
-            <TopicSuggestionList topicSuggestions={meeting.topicSuggestions} />
+            <TopicSuggestionList meetingId={meeting.id} />
             <NoteList meetingId={meeting.id} />
             <CreateNoteForm meetingId={meeting.id} />
           </div>

@@ -30,7 +30,7 @@ import { useCreateTodo } from "~/hooks";
 export const CreateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
   const [open, setOpen] = useState(false);
 
-    const createTodosMutation = useCreateTodo();
+  const createTodosMutation = useCreateTodo();
 
   const form = useForm<z.infer<typeof TodoCreateInput>>({
     resolver: zodResolver(TodoCreateInput),
@@ -42,7 +42,7 @@ export const CreateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" variant="outline">
           <Plus className="mr-2 h-3.5 w-3.5" />
           Todo
         </Button>
@@ -50,9 +50,7 @@ export const CreateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create a new todo</DialogTitle>
-          <DialogDescription>
-            Enter a title for the Todo
-          </DialogDescription>
+          <DialogDescription>Enter a title for the Todo</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -73,13 +71,11 @@ export const CreateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
                   <FormControl>
                     <Input
                       className="resize-none"
-                      placeholder="E.g. Title placeholder..."
+                      placeholder="E.g. Follow up on interest in going to Angular conference"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    The title of the todo.
-                  </FormDescription>
+                  <FormDescription>The title of the todo.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -89,11 +85,11 @@ export const CreateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
                       className="resize-none"
-                      placeholder="E.g. Description placeholder..."
+                      placeholder="E.g. Previously expressed interest in going to Angular conference. Follow up to see if there is a particular date in mind."
                       rows={4}
                       {...field}
                     />

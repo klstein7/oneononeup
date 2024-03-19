@@ -16,3 +16,13 @@ export const TopicSuggestionGenerateOutput = z.object({
     )
     .describe("The list of topic suggestions"),
 });
+
+export const TopicSuggestionFindInput = createSelectSchema(
+  topicSuggestions,
+).pick({
+  meetingId: true,
+});
+
+export const TopicSuggestionGenerateInput = z.object({
+  meetingId: z.string(),
+});

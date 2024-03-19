@@ -156,3 +156,17 @@ export const update = async (
 
   return todo;
 };
+
+export const del = async (todoId: string) => {
+  const results = await db
+    .delete(todos)
+    .where(eq(todos.id, todoId))
+    .returning();
+  
+  const todo = results[0];
+
+  if (!todo) {
+    throw new Error("Failed to delete todo");
+  }
+  return todo;
+}

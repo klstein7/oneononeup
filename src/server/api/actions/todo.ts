@@ -13,7 +13,7 @@ import { ai } from "~/server/integration";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { db } from "~/server/db";
 import { eq } from "drizzle-orm";
-import { dialogues, todos } from "~/server/db/schema";
+import { dialogues, meetings, todos } from "~/server/db/schema";
 
 export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
   const { meetings, dialogueId } = TodoGenerateInput.parse(input);
@@ -156,3 +156,17 @@ export const update = async (
 
   return todo;
 };
+
+export const del = async (todoId: string) => {
+  const results = await db
+    .delete(todos)
+    .where(eq(todos.id, todoId))
+    .returning();
+  
+  const todo = results[0];
+
+  if (!todo) {
+    throw new Error("Failed to delete todo");
+  }
+  return todo;
+}

@@ -9,7 +9,10 @@ export const createTable = sqliteTableCreator(
 export const dialogues = createTable("dialogue", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
   teamMemberId: text("team_member_id", { length: 25 })
-    .references(() => teamMembers.id)
+    .references(() => teamMembers.id, {
+      onUpdate: "cascade",
+      onDelete: "cascade",
+    })
     .notNull(),
   description: text("description").notNull(),
   createdAt: int("created_at", { mode: "timestamp" })
@@ -42,7 +45,10 @@ export const teamMembers = createTable("team_member", {
 export const meetings = createTable("meeting", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
   dialogueId: text("dialogue_id", { length: 25 })
-    .references(() => dialogues.id)
+    .references(() => dialogues.id, {
+      onUpdate: "cascade",
+      onDelete: "cascade",
+    })
     .notNull(),
   type: text("type", { enum: ["one-on-one"] }).notNull(),
   description: text("description").default("").notNull(),
@@ -57,12 +63,13 @@ export const meetings = createTable("meeting", {
 
 export const meetingRelations = relations(meetings, ({ many }) => ({
   notes: many(notes),
+  topicSuggestions: many(topicSuggestions),
 }));
 
 export const notes = createTable("note", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
   meetingId: text("meeting_id", { length: 25 })
-    .references(() => meetings.id)
+    .references(() => meetings.id, { onUpdate: "cascade", onDelete: "cascade" })
     .notNull(),
   content: text("content").notNull(),
   createdAt: int("created_at", { mode: "timestamp" })
@@ -83,7 +90,10 @@ export const noteRelations = relations(notes, ({ one }) => ({
 export const todos = createTable("todo", {
   id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
   dialogueId: text("dialogue_id", { length: 25 })
-    .references(() => dialogues.id)
+    .references(() => dialogues.id, {
+      onUpdate: "cascade",
+      onDelete: "cascade",
+    })
     .notNull(),
   title: text("title", { length: 256 }).notNull(),
   description: text("description").notNull(),
@@ -102,3 +112,27 @@ export const todoRelations = relations(todos, ({ one }) => ({
     references: [dialogues.id],
   }),
 }));
+
+export const topicSuggestions = createTable("topic_suggestion", {
+  id: text("id", { length: 25 }).primaryKey().$defaultFn(createId).notNull(),
+  meetingId: text("meeting_id", { length: 25 })
+    .references(() => meetings.id, { onUpdate: "cascade", onDelete: "cascade" })
+    .notNull(),
+  content: text("content").notNull(),
+  createdAt: int("created_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: int("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const topicSuggestionRelations = relations(
+  topicSuggestions,
+  ({ one }) => ({
+    meeting: one(meetings, {
+      fields: [topicSuggestions.meetingId],
+      references: [meetings.id],
+    }),
+  }),
+);

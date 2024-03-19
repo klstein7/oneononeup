@@ -30,6 +30,7 @@ import {
 } from "../ui/alert-dialog";
 import { useDeleteMeeting } from "~/hooks";
 import { toast } from "sonner";
+import { TopicSuggestionList } from "../topic-suggestion";
 
 export const MeetingItem = ({
   meeting,
@@ -37,6 +38,8 @@ export const MeetingItem = ({
   meeting: API["meeting"]["find"][number];
 }) => {
   const deleteMeetingMutation = useDeleteMeeting();
+
+  console.log(meeting.topicSuggestions);
 
   return (
     <AlertDialog>
@@ -86,6 +89,7 @@ export const MeetingItem = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="flex flex-col gap-3 p-3">
+            <TopicSuggestionList topicSuggestions={meeting.topicSuggestions} />
             <NoteList meetingId={meeting.id} />
             <CreateNoteForm meetingId={meeting.id} />
           </div>

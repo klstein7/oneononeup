@@ -1,4 +1,11 @@
-import { dialogue, teamMember, meeting, note, todo } from "./actions";
+import {
+  dialogue,
+  teamMember,
+  meeting,
+  note,
+  todo,
+  topicSuggestion,
+} from "./actions";
 
 export const api = {
   dialogue,
@@ -6,6 +13,7 @@ export const api = {
   note,
   teamMember,
   todo,
+  topicSuggestion,
 };
 
 export type DialogueType = {
@@ -28,10 +36,17 @@ export type TodoType = {
   [K in keyof typeof todo]: Awaited<ReturnType<(typeof todo)[K]>>;
 };
 
+export type TopicSuggestionType = {
+  [K in keyof typeof topicSuggestion]: Awaited<
+    ReturnType<(typeof topicSuggestion)[K]>
+  >;
+};
+
 export type API = {
   dialogue: DialogueType;
   meeting: MeetingType;
   note: NoteType;
   teamMember: TeamMemberType;
   todo: TodoType;
+  topicSuggestion: TopicSuggestionType;
 };

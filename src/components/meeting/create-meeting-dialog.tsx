@@ -119,7 +119,7 @@ export const CreateMeetingDialog = ({ dialogueId }: { dialogueId: string }) => {
             <Button
               type="submit"
               className="mt-3"
-              loading={form.formState.isLoading}
+              loading={form.formState.isSubmitting}
             >
               Create
             </Button>

@@ -89,6 +89,9 @@ export const MeetingItem = ({
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="flex flex-col gap-3 p-3">
+            <div className="text-xl font-medium">
+              {meeting.description}
+            </div>
             <TopicSuggestionList topicSuggestions={meeting.topicSuggestions} />
             <NoteList meetingId={meeting.id} />
             <CreateNoteForm meetingId={meeting.id} />

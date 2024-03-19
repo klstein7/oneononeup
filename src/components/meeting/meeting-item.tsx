@@ -9,7 +9,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { Separator } from "../ui/separator";
 import { Button } from "../ui";
 import { Ellipsis, MessageSquareText, Trash } from "lucide-react";
 import {

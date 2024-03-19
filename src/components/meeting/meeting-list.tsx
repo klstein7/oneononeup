@@ -12,10 +12,10 @@ export const MeetingList = ({ dialogueId }: { dialogueId: string }) => {
       <div className="flex items-center justify-center p-6">
         <Image
           src="/img/no-meetings.png"
-          width={275}
-          height={275}
+          width={325}
+          height={325}
           alt="No meetings"
-          className="antialiased opacity-30 saturate-0"
+          className="antialiased opacity-50 saturate-0"
         />
       </div>
     );

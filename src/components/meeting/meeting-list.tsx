@@ -2,17 +2,21 @@
 
 import { useMeetings } from "~/hooks";
 import { MeetingItem } from ".";
+import Image from "next/image";
 
 export const MeetingList = ({ dialogueId }: { dialogueId: string }) => {
   const meetings = useMeetings({ dialogueId });
 
   if (meetings.data.length === 0) {
     return (
-      <div>
-        <div className="text-sm">No meetings found.</div>
-        <div className="text-xs text-muted-foreground">
-          Create a meeting to get started!
-        </div>
+      <div className="flex items-center justify-center p-6">
+        <Image
+          src="/img/no-meetings.png"
+          width={275}
+          height={275}
+          alt="No meetings"
+          className="antialiased opacity-30 saturate-0"
+        />
       </div>
     );
   }

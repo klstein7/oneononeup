@@ -96,7 +96,14 @@ const SelectContent = React.forwardRef<
             "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
         )}
       >
-        {children}
+        { React.Children.count(children) > 0 ? (children) : 
+        (
+          <SelectItem value="default" disabled>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">None</span>
+          </div>
+        </SelectItem>
+        )}
       </SelectPrimitive.Viewport>
       <SelectScrollDownButton />
     </SelectPrimitive.Content>

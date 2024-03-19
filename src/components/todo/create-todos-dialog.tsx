@@ -16,6 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  Input,
   Textarea,
 } from "../ui";
 import { useForm } from "react-hook-form";
@@ -70,10 +71,9 @@ export const CreateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <Input
                       className="resize-none"
                       placeholder="E.g. Title placeholder..."
-                      rows={1}
                       {...field}
                     />
                   </FormControl>

@@ -15,7 +15,7 @@ export const TodoList = () => {
           width={250}
           height={250}
           alt="No todos"
-          className="rounded-full antialiased opacity-60 saturate-0"
+          className="rounded-full antialiased opacity-25 saturate-0"
         />
       </div>
     );

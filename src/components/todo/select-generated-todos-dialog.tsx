@@ -81,6 +81,7 @@ export const SelectGeneratedTodosDialog = ({
             </div>
           ))}
           <Button
+            loading={createManyTodoMutation.isPending}
             className="mt-3"
             onClick={async () => {
               console.log(selectedTodos);

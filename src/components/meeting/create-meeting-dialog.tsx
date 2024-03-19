@@ -48,7 +48,7 @@ export const CreateMeetingDialog = ({ dialogueId }: { dialogueId: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button>
           <Plus className="mr-2 h-3.5 w-3.5" />
           Meeting
         </Button>
@@ -116,7 +116,11 @@ export const CreateMeetingDialog = ({ dialogueId }: { dialogueId: string }) => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="mt-3">
+            <Button
+              type="submit"
+              className="mt-3"
+              loading={form.formState.isLoading}
+            >
               Create
             </Button>
           </form>

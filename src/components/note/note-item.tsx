@@ -30,8 +30,8 @@ export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
   return (
     <AlertDialog>
       <div className="flex items-center gap-3 rounded pl-3">
-        <div className="h-2 w-2 rounded-full bg-muted-foreground" />
-        <div className="flex-1 text-lg">{note.content}</div>
+        <div className="h-2 w-2 rounded-full bg-foreground/25" />
+        <div className="flex-1">{note.content}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="icon" variant="ghost">

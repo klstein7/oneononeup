@@ -90,6 +90,7 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
             </div>
           ))}
           <Button
+            loading={generateTodosMutation.isPending}
             className="mt-3"
             onClick={async () => {
               const todos = await generateTodosMutation.mutateAsync({

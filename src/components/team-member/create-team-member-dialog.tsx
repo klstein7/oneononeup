@@ -126,7 +126,11 @@ export const CreateTeamMemberDialog = () => {
                 </FormItem>
               )}
             />
-            <Button className="mt-3" type="submit">
+            <Button
+              className="mt-3"
+              type="submit"
+              loading={form.formState.isSubmitting}
+            >
               Create
             </Button>
           </form>

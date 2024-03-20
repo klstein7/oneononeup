@@ -22,7 +22,7 @@ import { useUpdateNote } from "~/hooks/note/use-update-note";
 import { NoteUpdateInput } from "~/server/api/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export const EditNoteDialog = ({
@@ -39,6 +39,12 @@ export const EditNoteDialog = ({
     resolver: zodResolver(NoteUpdateInput)
   });
 
+  useEffect(() => {
+    if (!open) {
+      form.reset({content: ""});
+    }
+  }, [open]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -46,7 +52,9 @@ export const EditNoteDialog = ({
         <DialogHeader>
           <DialogTitle>Edit note</DialogTitle>
         </DialogHeader>
-        <div><b>Old Content: </b>{note.content}</div>
+        <div className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Note Content:</div>
+        <div className="text-sm">{note.content}</div>
+        <hr/>
         <Form {...form}>
           <form
             className="flex flex-col gap-3"
@@ -64,7 +72,7 @@ export const EditNoteDialog = ({
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Content</FormLabel>
+                  <FormLabel>New Note Content</FormLabel>
                   <FormControl>
                     <Input
                       className="resize-none"
@@ -72,7 +80,7 @@ export const EditNoteDialog = ({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>New Note content here...</FormDescription>
+                  <FormDescription>Enter new content here...</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

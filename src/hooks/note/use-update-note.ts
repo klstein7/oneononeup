@@ -16,9 +16,9 @@ export const useUpdateNote = () => {
       }) => {
         return api.note.update(noteId, input);
       },
-    onSuccess: async ({ id }) => {
+    onSuccess: async ({ meetingId }) => {
       await queryClient.invalidateQueries({
-        queryKey: ["notes", { id }],
+        queryKey: ["notes", { meetingId }],
       });
     },
   });

@@ -2,7 +2,7 @@
 
 import { type API } from "~/server/api";
 import { Button } from "../ui";
-import { Ellipsis, Trash } from "lucide-react";
+import { Ellipsis, PencilIcon, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +32,7 @@ export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
                   e.preventDefault();
                 }}
               >
+                <PencilIcon className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
             }

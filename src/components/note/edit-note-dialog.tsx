@@ -5,7 +5,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -37,10 +36,7 @@ export const EditNoteDialog = ({
   const updateNoteMutation = useUpdateNote();
 
   const form = useForm<z.infer<typeof NoteUpdateInput>>({
-    resolver: zodResolver(NoteUpdateInput),
-    defaultValues: {
-      content: note.content,
-    },
+    resolver: zodResolver(NoteUpdateInput)
   });
 
   return (
@@ -50,6 +46,7 @@ export const EditNoteDialog = ({
         <DialogHeader>
           <DialogTitle>Edit note</DialogTitle>
         </DialogHeader>
+        <div><b>Old Content: </b>{note.content}</div>
         <Form {...form}>
           <form
             className="flex flex-col gap-3"
@@ -59,6 +56,7 @@ export const EditNoteDialog = ({
                 input: values,
               });
               toast.success("Note updated successfully!");
+              form.reset();
             })}
           >
             <FormField
@@ -66,7 +64,7 @@ export const EditNoteDialog = ({
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Content</FormLabel>
+                  <FormLabel>New Content</FormLabel>
                   <FormControl>
                     <Input
                       className="resize-none"
@@ -80,7 +78,13 @@ export const EditNoteDialog = ({
               )}
             />
             <div className="mt-3 flex items-center justify-end gap-3">
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="secondary" 
+                onClick={() => {
+                  setOpen(false)
+                }}
+              >
+                Cancel
+              </Button>
               <Button type="submit" loading={form.formState.isSubmitting}>
                 Update
               </Button>

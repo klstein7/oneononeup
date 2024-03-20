@@ -3,6 +3,7 @@
 import { useTodos } from "~/hooks";
 import Image from "next/image";
 import { TodoItem } from "./todo-item";
+import { useMemo } from "react";
 
 export const TodoList = () => {
   const todos = useTodos();
@@ -23,21 +24,9 @@ export const TodoList = () => {
 
   return (
     <div className="flex flex-col gap-1.5 overflow-y-auto scrollbar scrollbar-track-background scrollbar-thumb-muted-foreground">
-      {todos.data
-        .sort((a, b) => {
-          if (a.completed === b.completed) {
-            return 0;
-          }
-
-          if (a.completed) {
-            return 1;
-          }
-
-          return -1;
-        })
-        .map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
-        ))}
+      {todos.data.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} />
+      ))}
     </div>
   );
 };

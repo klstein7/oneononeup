@@ -22,6 +22,7 @@ import {
 } from "../ui/alert-dialog";
 import { toast } from "sonner";
 import { useDeleteNote } from "~/hooks";
+import { EditNoteDialog } from "./edit-note-dialog";
 
 export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
   const deleteNoteMutation = useDeleteNote();
@@ -29,7 +30,7 @@ export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
   return (
     <AlertDialog>
       <div className="flex items-center gap-3 rounded pl-3">
-        <div className="h-2 w-2 rounded-full bg-foreground/25" />
+        <div className="h-1.5 w-1.5 rounded-full bg-foreground/25" />
         <div className="flex-1">{note.content}</div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -48,6 +49,17 @@ export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
                 Delete
               </DropdownMenuItem>
             </AlertDialogTrigger>
+            <EditNoteDialog
+              trigger={
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  Edit
+                </DropdownMenuItem>
+              }
+            />
           </DropdownMenuContent>
         </DropdownMenu>
         <AlertDialogContent>

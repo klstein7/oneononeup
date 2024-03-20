@@ -53,8 +53,8 @@ export const TopicSuggestionList = ({ meetingId }: { meetingId: string }) => {
   };
 
   return (
-    <div className="relative flex flex-col gap-1.5 rounded-md border p-3 pt-4">
-      <div className="absolute left-0 top-0 -translate-y-2 translate-x-5 bg-background px-2 text-xs text-muted-foreground">
+    <div className="relative flex flex-col gap-1.5 rounded-md border bg-background p-3 pt-4">
+      <div className="absolute left-0 top-0 -translate-y-2 translate-x-5 rounded bg-background px-2 text-xs text-muted-foreground">
         Suggested discussion topics
       </div>
       {renderTopicSuggestions()}

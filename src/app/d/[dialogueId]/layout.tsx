@@ -4,7 +4,7 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { CreateDialogueDialog, DialogueList } from "~/components/dialogue";
-import { RightSidebar } from "~/components/layout";
+import { LeftSidebar, RightSidebar } from "~/components/layout";
 import { api } from "~/server/api";
 
 export default async function DialogueLayout({
@@ -27,10 +27,7 @@ export default async function DialogueLayout({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex h-screen w-full overflow-hidden">
-        <div className="flex h-full w-80 flex-col gap-3 bg-secondary/25 p-3">
-          <CreateDialogueDialog />
-          <DialogueList />
-        </div>
+        <LeftSidebar />
         <main className="flex-1 overflow-y-auto border-x scrollbar scrollbar-track-background scrollbar-thumb-muted">
           {children}
         </main>

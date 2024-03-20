@@ -15,7 +15,7 @@ export const MeetingList = ({ dialogueId }: { dialogueId: string }) => {
           width={325}
           height={325}
           alt="No meetings"
-          className="antialiased opacity-25 saturate-0"
+          className="antialiased opacity-25 saturate-0 dark:opacity-15 dark:invert"
         />
       </div>
     );

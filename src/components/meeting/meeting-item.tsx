@@ -36,14 +36,17 @@ import { SelectGeneratedTodosDialog } from "../todo";
 import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
 import { Skeleton } from "../ui/skeleton";
+import { DeleteMeetingDialog } from ".";
 
 export const MeetingItem = ({
   meeting,
+  isReadOnly = false,
 }: {
   meeting: API["meeting"]["find"][number];
+  isReadOnly?: boolean;
 }) => {
-  const [, setGeneratedTodos] = useAtom(generatedTodosAtom);
   const deleteMeetingMutation = useDeleteMeeting();
+  const [, setGeneratedTodos] = useAtom(generatedTodosAtom);
   const params = useParams();
   const dialogueId = params.dialogueId as string;
   const generateTodosMutation = useGenerateTodos();
@@ -51,38 +54,36 @@ export const MeetingItem = ({
 
   if (generateTodosMutation.isPending) {
     return (
-      <div className="rounded border bg-secondary/25">
-        <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
-          <Skeleton className="h-5 w-5 rounded-full" />
-          <div className="flex-1">
-            <Skeleton className="h-4" /> 
+        <div className="rounded border bg-secondary/25">
+          <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
+            <Skeleton className="h-5 w-5 rounded-full" />
+            <div className="flex-1">
+              <Skeleton className="h-4" />
+            </div>
           </div>
         </div>
-      </div>
     )
   }
 
   return (
-    <AlertDialog>
-      <Collapsible className="rounded border bg-secondary/25">
-        <CollapsibleTrigger asChild>
-          <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
-            <MessageSquareText className="h-5 w-5 text-muted-foreground" />
-            <div className="flex-1">
-              <div className="text-lg font-medium">
-                {meeting.description}
-              </div>
-              <div className="text-sm">
-                {moment(meeting.createdAt).format("MMM D, YYYY, h:mm A")}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Updated {moment(meeting.updatedAt).fromNow()}
-              </div>
+    <Collapsible className="w-full rounded border bg-secondary/25">
+      <CollapsibleTrigger asChild>
+        <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
+          <MessageSquareText className="h-5 w-5 text-muted-foreground" />
+          <div className="flex-1">
+            <div className="text-lg font-medium">{meeting.description}</div>
+            <div className="text-sm">
+              {moment(meeting.createdAt).format("MMM D, YYYY, h:mm A")}
             </div>
-            <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="font-normal">
-                {meeting.type}
-              </Badge>
+            <div className="text-xs text-muted-foreground">
+              Updated {moment(meeting.updatedAt).fromNow()}
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Badge variant="secondary" className="font-normal">
+              {meeting.type}
+            </Badge>
+            {!isReadOnly && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -98,64 +99,48 @@ export const MeetingItem = ({
                 <DropdownMenuContent side="bottom" align="end">
                   <SelectGeneratedTodosDialog dialogueId={dialogueId} />
                   <DropdownMenuItem
-                    disabled={generateTodosMutation.isPending}
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      const todos = await generateTodosMutation.mutateAsync({
-                        dialogueId,
-                        meetings: [{
-                          ...meeting,
-                          notes: notes.data
-                        }],
-                      });
-                      setGeneratedTodos(todos);
-                    }}
+                      disabled={generateTodosMutation.isPending}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        const todos = await generateTodosMutation.mutateAsync({
+                          dialogueId,
+                          meetings: [{
+                            ...meeting,
+                            notes: notes.data
+                          }],
+                        });
+                        setGeneratedTodos(todos);
+                      }}
                   >
                     <Sparkles className="mr-2 h-4 w-4" />
                     Generate todos
                   </DropdownMenuItem>
-                  <AlertDialogTrigger asChild>
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </AlertDialogTrigger>
+                  <DeleteMeetingDialog
+                      meetingId={meeting.id}
+                      trigger={
+                        <DropdownMenuItem
+                            onSelect={(e) => {
+                              e.preventDefault();
+                            }}
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      }
+                  />
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
+            )}
           </div>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="flex flex-col gap-3 p-3">
-            <TopicSuggestionList meetingId={meeting.id} />
-            <NoteList meetingId={meeting.id} />
-            <CreateNoteForm meetingId={meeting.id} />
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete meeting</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete this meeting?
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={async () => {
-              await deleteMeetingMutation.mutateAsync(meeting.id);
-              toast.success("Meeting deleted successfully!");
-            }}
-          >
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="flex flex-col gap-3 p-3">
+          <TopicSuggestionList meetingId={meeting.id} isReadOnly={isReadOnly} />
+          <NoteList meetingId={meeting.id} />
+          {!isReadOnly && <CreateNoteForm meetingId={meeting.id} />}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };

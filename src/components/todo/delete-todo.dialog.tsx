@@ -1,8 +1,9 @@
 "use client";
 
-import { toast } from "sonner";
+import { useDeleteTodo } from "~/hooks";
 import {
   AlertDialog,
+  AlertDialogTrigger,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -10,34 +11,34 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { useDeleteNote } from "~/hooks";
+import { toast } from "sonner";
 
-export const DeleteNoteDialog = ({
-  noteId,
+export const DeleteTodoDialog = ({
+  todoId,
   trigger,
 }: {
-  noteId: string;
+  todoId: string;
   trigger: JSX.Element;
 }) => {
-  const deleteNoteMutation = useDeleteNote();
+  const deletetodoMutation = useDeleteTodo();
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete note</AlertDialogTitle>
+          <AlertDialogTitle>Delete todo</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this note?
+            Are you sure you want to delete this todo?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              await deleteNoteMutation.mutateAsync(noteId);
-              toast.success("Note deleted successfully!");
+              await deletetodoMutation.mutateAsync(todoId);
+              toast.success("Todo deleted successfully!");
             }}
           >
             Delete

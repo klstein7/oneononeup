@@ -10,14 +10,32 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { Button } from "../ui";
-import { Ellipsis, MessageSquareText, Trash } from "lucide-react";
+import { Ellipsis, MessageSquareText, Trash, Sparkles } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
+import { useDeleteMeeting, useGenerateTodos, useNotes } from "~/hooks";
+import { toast } from "sonner";
 import { TopicSuggestionList } from "../topic-suggestion";
+import { useParams } from "next/navigation";
+import { SelectGeneratedTodosDialog } from "../todo";
+import { useAtom } from "jotai";
+import { generatedTodosAtom } from "~/atoms";
+import { Skeleton } from "../ui/skeleton";
 import { DeleteMeetingDialog } from ".";
 
 export const MeetingItem = ({
@@ -27,6 +45,26 @@ export const MeetingItem = ({
   meeting: API["meeting"]["find"][number];
   isReadOnly?: boolean;
 }) => {
+  const deleteMeetingMutation = useDeleteMeeting();
+  const [, setGeneratedTodos] = useAtom(generatedTodosAtom);
+  const params = useParams();
+  const dialogueId = params.dialogueId as string;
+  const generateTodosMutation = useGenerateTodos();
+  const notes = useNotes({meetingId: meeting.id});
+
+  if (generateTodosMutation.isPending) {
+    return (
+        <div className="rounded border bg-secondary/25">
+          <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
+            <Skeleton className="h-5 w-5 rounded-full" />
+            <div className="flex-1">
+              <Skeleton className="h-4" />
+            </div>
+          </div>
+        </div>
+    )
+  }
+
   return (
     <Collapsible className="w-full rounded border bg-secondary/25">
       <CollapsibleTrigger asChild>
@@ -59,18 +97,36 @@ export const MeetingItem = ({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="bottom" align="end">
+                  <SelectGeneratedTodosDialog dialogueId={dialogueId} />
+                  <DropdownMenuItem
+                      disabled={generateTodosMutation.isPending}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        const todos = await generateTodosMutation.mutateAsync({
+                          dialogueId,
+                          meetings: [{
+                            ...meeting,
+                            notes: notes.data
+                          }],
+                        });
+                        setGeneratedTodos(todos);
+                      }}
+                  >
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Generate todos
+                  </DropdownMenuItem>
                   <DeleteMeetingDialog
-                    meetingId={meeting.id}
-                    trigger={
-                      <DropdownMenuItem
-                        onSelect={(e) => {
-                          e.preventDefault();
-                        }}
-                      >
-                        <Trash className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    }
+                      meetingId={meeting.id}
+                      trigger={
+                        <DropdownMenuItem
+                            onSelect={(e) => {
+                              e.preventDefault();
+                            }}
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      }
                   />
                 </DropdownMenuContent>
               </DropdownMenu>

@@ -25,6 +25,7 @@ import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
 import { Skeleton } from "../ui/skeleton";
 import { DeleteMeetingDialog } from ".";
+import { toast } from "sonner";
 
 export const MeetingItem = ({
   meeting,
@@ -98,6 +99,11 @@ export const MeetingItem = ({
                           },
                         ],
                       });
+                      if (todos.length === 0) {
+                        toast.info(
+                          "Unable to generate new todos, please try again after new notes are added",
+                        );
+                      }
                       setGeneratedTodos(todos);
                     }}
                   >

@@ -18,6 +18,7 @@ import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
 import { useQueryClient } from "@tanstack/react-query";
 import { MeetingItem } from "../meeting";
+import { toast } from "sonner";
 
 export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
   const queryClient = useQueryClient();
@@ -89,6 +90,11 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
                   notes: getNotesByMeetingId(m.id),
                 })),
               });
+              if (todos.length === 0) {
+                toast.message(
+                  "Unable to generate new actionable todos from selected meetings",
+                );
+              }
               setGeneratedTodos(todos);
               setOpen(false);
             }}

@@ -35,6 +35,7 @@ import { useParams } from "next/navigation";
 import { SelectGeneratedTodosDialog } from "../todo";
 import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
+import { Skeleton } from "../ui/skeleton";
 
 export const MeetingItem = ({
   meeting,
@@ -47,6 +48,19 @@ export const MeetingItem = ({
   const dialogueId = params.dialogueId as string;
   const generateTodosMutation = useGenerateTodos();
   const notes = useNotes({meetingId: meeting.id});
+
+  if (generateTodosMutation.isPending) {
+    return (
+      <div className="rounded border bg-secondary/25">
+        <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
+          <Skeleton className="h-5 w-5 rounded-full" />
+          <div className="flex-1">
+            <Skeleton className="h-4" /> 
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <AlertDialog>

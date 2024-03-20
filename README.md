@@ -1,29 +1,57 @@
-# Create T3 App
+# Innovation week
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Introduction
 
-## What's next? How do I make an app with this?
+This is a project for FCC's innovation week. It is a webapp that assists users in keeping track of their meetings. There is also some AI integration to generate todos and topic suggestions for the meetings.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Team Members
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Kyle Stein
+- Naizhao Tan
+- Matthew Ruttan
+- Connor Kleisinger
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Technologies
 
-## Learn More
+- [Next.js](https://nextjs.org/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Tanstack Query](https://tanstack.com/)
+- [React Hook Form](https://react-hook-form.com/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Drizzle ORM](https://orm.drizzle.team/docs/overview)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+## Project Structure
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+This project follows a specific structure:
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- `src/`: This is where all the source code of the application lives.
+  - `app/`: Contains the main layout and page files of the application.
+  - `atoms/`: Contains atomic components used across the application.
+  - `components/`: Contains all the React components, organized by their functionality.
+  - `hooks/`: Contains custom React hooks.
+  - `lib/`: Contains utility functions and libraries.
+  - `server/`: Contains server-side code.
+  - `styles/`: Contains all the styles for the application.
+- `public/`: Contains static files like images.
+- `components.json`: A JSON file containing component metadata.
+- `.env.example`: An example file showing what environment variables are needed.
 
-## How do I deploy this?
+## Installation
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+To install the project, clone the repository and run the following commands:
+
+```bash
+pnpm i
+pnpm db:push
+pnpm dev
+```
+
+You will also need these environment variables:
+
+```bash
+DATABASE_URL=db.sqlite
+OPENAI_API_KEY=your-openai-api-key
+```
+
+Save them in a `.env` file in the root of the project.

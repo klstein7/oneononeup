@@ -25,6 +25,7 @@ export const NoteItem = ({ note }: { note: API["note"]["find"][number] }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
           <EditNoteDialog
+            note={note}
             trigger={
               <DropdownMenuItem
                 onSelect={(e) => {

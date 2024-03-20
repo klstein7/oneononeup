@@ -13,4 +13,8 @@ export const NoteFindInput = createSelectSchema(notes).pick({
   meetingId: true,
 });
 
+export const NoteUpdateInput = createSelectSchema(notes).pick({
+  content: true
+})
+
 export const Note = createSelectSchema(notes);

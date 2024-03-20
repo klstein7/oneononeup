@@ -2,16 +2,13 @@ import "~/styles/globals.css";
 
 import { Jost as FontSans } from "next/font/google";
 import { Providers } from "./providers";
-
+import { Toaster } from "~/components/ui";
 import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
 import { api } from "~/server/api";
-import { CreateDialogueDialog, DialogueList } from "~/components/dialogue";
-import { Toaster } from "~/components/ui";
-import { RightSidebar } from "~/components/layout";
 
 const font = FontSans({
   subsets: ["latin"],
@@ -32,11 +29,6 @@ export default async function RootLayout({
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["team-members"],
-    queryFn: () => api.teamMember.find(),
-  });
-
-  await queryClient.prefetchQuery({
     queryKey: ["dialogues"],
     queryFn: () => api.dialogue.find(),
   });
@@ -46,15 +38,8 @@ export default async function RootLayout({
       <body className={font.className}>
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex h-screen w-full overflow-hidden">
-              <div className="flex h-full w-80 flex-col gap-3 bg-secondary/25 p-3">
-                <CreateDialogueDialog />
-                <DialogueList />
-              </div>
-              <main className="flex-1 overflow-y-auto border-x scrollbar scrollbar-track-background scrollbar-thumb-muted">
-                {children}
-              </main>
-              <RightSidebar />
+            <div className="flex h-screen">
+              <div className="flex-1">{children}</div>
             </div>
             <Toaster />
           </HydrationBoundary>

@@ -19,7 +19,7 @@ export const DialogueItem = ({
   return (
     <div
       className={cn(
-        "flex cursor-pointer select-none items-center gap-3 rounded-sm border bg-background p-3 transition-all duration-100 ease-in-out hover:bg-secondary/40",
+        "flex min-w-60 cursor-pointer select-none items-center gap-3 rounded-sm border bg-background p-3 transition-all duration-100 ease-in-out hover:bg-secondary/40",
         {
           "border border-foreground/50": dialogueId === dialogue.id,
         },

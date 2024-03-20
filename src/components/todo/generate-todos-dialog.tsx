@@ -11,14 +11,13 @@ import {
   DialogTrigger,
 } from "../ui";
 import { useGenerateTodos, useMeetings } from "~/hooks";
-import moment from "moment";
 import { Checkbox } from "../ui/checkbox";
-import { Badge } from "../ui/badge";
 import { useEffect, useState } from "react";
 import { type API } from "~/server/api";
 import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
 import { useQueryClient } from "@tanstack/react-query";
+import { MeetingItem } from "../meeting";
 
 export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
   const queryClient = useQueryClient();
@@ -54,7 +53,7 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
           Generate
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-screen overflow-y-auto scrollbar scrollbar-track-transparent scrollbar-thumb-muted">
         <DialogHeader>
           <DialogTitle>Generate todos</DialogTitle>
           <DialogDescription>
@@ -63,10 +62,7 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
         </DialogHeader>
         <div className="flex flex-col gap-3">
           {meetings.data.map((meeting) => (
-            <div
-              className="flex items-center gap-3 rounded-md border p-3"
-              key={meeting.id}
-            >
+            <div className="flex items-center gap-3" key={meeting.id}>
               <Checkbox
                 className="rounded"
                 onCheckedChange={(checked) => {
@@ -79,14 +75,7 @@ export const GenerateTodosDialog = ({ dialogueId }: { dialogueId: string }) => {
                   }
                 }}
               />
-              <div className="flex w-full gap-3">
-                <div className="flex-1">
-                  {moment(meeting.createdAt).format("MMM D, YYYY, h:mm A")}
-                </div>
-                <Badge variant="secondary" className="font-normal">
-                  {meeting.type}
-                </Badge>
-              </div>
+              <MeetingItem meeting={meeting} isReadOnly />
             </div>
           ))}
           <Button

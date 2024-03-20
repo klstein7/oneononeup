@@ -22,11 +22,13 @@ import { DeleteMeetingDialog } from ".";
 
 export const MeetingItem = ({
   meeting,
+  isReadOnly = false,
 }: {
   meeting: API["meeting"]["find"][number];
+  isReadOnly?: boolean;
 }) => {
   return (
-    <Collapsible className="rounded border bg-secondary/25">
+    <Collapsible className="w-full rounded border bg-secondary/25">
       <CollapsibleTrigger asChild>
         <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
           <MessageSquareText className="h-5 w-5 text-muted-foreground" />
@@ -43,42 +45,44 @@ export const MeetingItem = ({
             <Badge variant="secondary" className="font-normal">
               {meeting.type}
             </Badge>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
-                  <Ellipsis className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="bottom" align="end">
-                <DeleteMeetingDialog
-                  meetingId={meeting.id}
-                  trigger={
-                    <DropdownMenuItem
-                      onSelect={(e) => {
-                        e.preventDefault();
-                      }}
-                    >
-                      <Trash className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  }
-                />
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {!isReadOnly && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <Ellipsis className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="bottom" align="end">
+                  <DeleteMeetingDialog
+                    meetingId={meeting.id}
+                    trigger={
+                      <DropdownMenuItem
+                        onSelect={(e) => {
+                          e.preventDefault();
+                        }}
+                      >
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    }
+                  />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
         <div className="flex flex-col gap-3 p-3">
-          <TopicSuggestionList meetingId={meeting.id} />
+          <TopicSuggestionList meetingId={meeting.id} isReadOnly={isReadOnly} />
           <NoteList meetingId={meeting.id} />
-          <CreateNoteForm meetingId={meeting.id} />
+          {!isReadOnly && <CreateNoteForm meetingId={meeting.id} />}
         </div>
       </CollapsibleContent>
     </Collapsible>

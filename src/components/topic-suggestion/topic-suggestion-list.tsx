@@ -5,7 +5,13 @@ import { Button } from "../ui";
 import { RefreshCw } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 
-export const TopicSuggestionList = ({ meetingId }: { meetingId: string }) => {
+export const TopicSuggestionList = ({
+  meetingId,
+  isReadOnly = false,
+}: {
+  meetingId: string;
+  isReadOnly?: boolean;
+}) => {
   const topicSuggestions = useTopicSuggestions({ meetingId });
 
   const generateTopicSuggestionsMutation = useGenerateTopicSuggestions();
@@ -58,17 +64,19 @@ export const TopicSuggestionList = ({ meetingId }: { meetingId: string }) => {
         Suggested discussion topics
       </div>
       {renderTopicSuggestions()}
-      <Button
-        variant="outline"
-        className="h-fit w-fit px-2 py-1 text-xs"
-        disabled={generateTopicSuggestionsMutation.isPending}
-        onClick={async () => {
-          await generateTopicSuggestionsMutation.mutateAsync({ meetingId });
-        }}
-      >
-        <RefreshCw className="mr-2 h-3 w-3" />
-        Regenerate
-      </Button>
+      {!isReadOnly && (
+        <Button
+          variant="outline"
+          className="h-fit w-fit px-2 py-1 text-xs"
+          disabled={generateTopicSuggestionsMutation.isPending}
+          onClick={async () => {
+            await generateTopicSuggestionsMutation.mutateAsync({ meetingId });
+          }}
+        >
+          <RefreshCw className="mr-2 h-3 w-3" />
+          Regenerate
+        </Button>
+      )}
     </div>
   );
 };

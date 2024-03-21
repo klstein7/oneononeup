@@ -26,6 +26,8 @@ import { generatedTodosAtom } from "~/atoms";
 import { Skeleton } from "../ui/skeleton";
 import { DeleteMeetingDialog } from ".";
 import { toast } from "sonner";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const MeetingItem = ({
   meeting,
@@ -34,6 +36,7 @@ export const MeetingItem = ({
   meeting: API["meeting"]["find"][number];
   isReadOnly?: boolean;
 }) => {
+  const [open, setOpen] = useState(false);
   const [, setGeneratedTodos] = useAtom(generatedTodosAtom);
   const params = useParams();
   const dialogueId = params.dialogueId as string;
@@ -54,7 +57,11 @@ export const MeetingItem = ({
   }
 
   return (
-    <Collapsible className="w-full rounded border bg-secondary/25">
+    <Collapsible
+      open={open}
+      onOpenChange={setOpen}
+      className="w-full rounded border bg-secondary/25"
+    >
       <CollapsibleTrigger asChild>
         <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
           <MessageSquareText className="h-5 w-5 text-muted-foreground" />
@@ -129,13 +136,25 @@ export const MeetingItem = ({
           </div>
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent>
-        <div className="flex flex-col gap-3 p-3">
-          <TopicSuggestionList meetingId={meeting.id} isReadOnly={isReadOnly} />
-          <NoteList meetingId={meeting.id} />
-          {!isReadOnly && <CreateNoteForm meetingId={meeting.id} />}
-        </div>
-      </CollapsibleContent>
+      <AnimatePresence>
+        {open && (
+          <CollapsibleContent asChild>
+            <motion.div
+              className="flex flex-col gap-3 p-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <TopicSuggestionList
+                meetingId={meeting.id}
+                isReadOnly={isReadOnly}
+              />
+              <NoteList meetingId={meeting.id} />
+              {!isReadOnly && <CreateNoteForm meetingId={meeting.id} />}
+            </motion.div>
+          </CollapsibleContent>
+        )}
+      </AnimatePresence>
     </Collapsible>
   );
 };

@@ -48,8 +48,7 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
         Your job is to assist the user in generating todo items based on the notes from a selection of meetings.
         The todo items should be actionable and specific.
         The name of the team member is: ${teamMember.name}.
-        The relation of the team member to me is: ${teamMember.type}.
-        IMPORTANT: When possible, try to combine notes into a singular actionable todo item.
+        The relation of the team member to me is: ${teamMember.type}.        
 
         Here are the notes from the meetings (in JSON format):
         ${JSON.stringify(meetings, null, 2)}
@@ -58,6 +57,7 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
         ${JSON.stringify(currentTodos, null, 2)}
 
         IMPORTANT: Do not generate todos if an existing todo item already exists with the same intent.
+        IMPORTANT: When possible, and when it makes sense, group similar todo items together.
       `,
       },
     ],
@@ -102,21 +102,19 @@ export const generate = async (input: z.infer<typeof TodoGenerateInput>) => {
   return [];
 };
 
-export const create = async (
-  input: z.infer<typeof TodoCreateInput>
-) => {
+export const create = async (input: z.infer<typeof TodoCreateInput>) => {
   const value = TodoCreateInput.parse(input);
 
   const results = await db.insert(todos).values(value).returning();
 
   const todo = results[0];
 
-  if(!todo){
+  if (!todo) {
     throw new Error("Failed to create todo");
   }
 
   return todo;
-}
+};
 
 export const createMany = async (
   input: z.infer<typeof TodoCreateManyInput>,
@@ -162,11 +160,11 @@ export const del = async (todoId: string) => {
     .delete(todos)
     .where(eq(todos.id, todoId))
     .returning();
-  
+
   const todo = results[0];
 
   if (!todo) {
     throw new Error("Failed to delete todo");
   }
   return todo;
-}
+};

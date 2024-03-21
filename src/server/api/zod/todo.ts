@@ -36,4 +36,6 @@ export const TodoFindInput = createSelectSchema(todos).pick({
 
 export const TodoUpdateInput = createSelectSchema(todos).pick({
   completed: true,
+  title: true,
+  description: true,
 });

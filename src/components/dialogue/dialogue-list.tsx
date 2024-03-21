@@ -11,13 +11,17 @@ export const DialogueList = forwardRef<
 >(({ className }, ref) => {
   const dialogues = useDialogues();
 
-  return (
-    <div ref={ref} className={cn("flex flex-col gap-3", className)}>
-      {dialogues.data.map((dialogue) => (
-        <DialogueItem key={dialogue.id} dialogue={dialogue} />
-      ))}
-    </div>
-  );
+  if(dialogues.data.length > 0) {
+    return (
+      <div ref={ref} className={cn("flex flex-col gap-3", className)}>
+        {dialogues.data.map((dialogue) => (
+          <DialogueItem key={dialogue.id} dialogue={dialogue} />
+        ))}
+      </div>
+    );
+  }
+
+  return null;
 });
 
 DialogueList.displayName = "DialogueList";

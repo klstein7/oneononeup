@@ -28,7 +28,11 @@ export const DeleteDialogueDialog = ({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Dialogue</AlertDialogTitle>
           <AlertDialogDescription>

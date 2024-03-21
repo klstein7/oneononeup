@@ -54,6 +54,9 @@ export const DialogueItem = ({
             dialogueId={dialogue.id}
             trigger={
               <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
                 onSelect={(e) => {
                   e.preventDefault();
                 }}

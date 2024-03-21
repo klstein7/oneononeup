@@ -43,3 +43,18 @@ export const get = async (dialogueId: string) => {
 
   return result;
 };
+
+export const del = async (dialogueId: string) => {
+  const results = await db
+    .delete(dialogues)
+    .where(eq(dialogues.id, dialogueId))
+    .returning();
+
+  const dialogue = results[0];
+
+  if (!dialogue) {
+    throw new Error("Failed to delete dialogue");
+  }
+
+  return dialogue;
+};

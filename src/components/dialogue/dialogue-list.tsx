@@ -18,16 +18,22 @@ export const DialogueList = ({
       autoAnimate(animateRef.current);
     }
   }, [animateRef]);
+  
+  if(dialogues.data.length > 0) {
+    return (
+      <div
+        ref={animateRef}
+        className={cn("flex flex-col gap-3", className)}
+        {...props}
+      >
+        {dialogues.data.map((dialogue) => (
+          <DialogueItem key={dialogue.id} dialogue={dialogue} />
+        ))}
+      </div>
+    );
+  }
 
-  return (
-    <div
-      ref={animateRef}
-      className={cn("flex flex-col gap-3", className)}
-      {...props}
-    >
-      {dialogues.data.map((dialogue) => (
-        <DialogueItem key={dialogue.id} dialogue={dialogue} />
-      ))}
-    </div>
-  );
+  return null;
 };
+
+DialogueList.displayName = "DialogueList";

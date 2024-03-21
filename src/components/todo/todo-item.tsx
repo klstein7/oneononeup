@@ -5,7 +5,7 @@ import { Button } from "../ui";
 import { Checkbox } from "../ui/checkbox";
 import { useUpdateTodo } from "~/hooks";
 import { cn } from "~/lib/utils";
-import { Ellipsis, Trash } from "lucide-react";
+import { Ellipsis, PencilIcon, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { DeleteTodoDialog } from ".";
+import { EditTodoDialog } from "./edit-todo.dialog";
 
 export const TodoItem = ({ todo }: { todo: API["todo"]["find"][number] }) => {
   const updateTodoMutation = useUpdateTodo();
@@ -33,6 +34,7 @@ export const TodoItem = ({ todo }: { todo: API["todo"]["find"][number] }) => {
           await updateTodoMutation.mutateAsync({
             todoId: todo.id,
             input: {
+              ...todo,
               completed: checked as boolean,
             },
           });
@@ -49,6 +51,19 @@ export const TodoItem = ({ todo }: { todo: API["todo"]["find"][number] }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
+          <EditTodoDialog
+            todo={todo}
+            trigger={
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <PencilIcon className="mr-2 h-4 w-4"></PencilIcon>
+                Edit
+              </DropdownMenuItem>
+            }
+          />
           <DeleteTodoDialog
             todoId={todo.id}
             trigger={

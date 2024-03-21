@@ -3,9 +3,18 @@
 import { useMeetings } from "~/hooks";
 import { MeetingItem } from ".";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
+import autoAnimate from "@formkit/auto-animate";
 
 export const MeetingList = ({ dialogueId }: { dialogueId: string }) => {
+  const animateRef = useRef<HTMLDivElement>(null);
   const meetings = useMeetings({ dialogueId });
+
+  useEffect(() => {
+    if (animateRef.current) {
+      autoAnimate(animateRef.current);
+    }
+  }, [animateRef]);
 
   if (meetings.data.length === 0) {
     return (
@@ -22,7 +31,7 @@ export const MeetingList = ({ dialogueId }: { dialogueId: string }) => {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div ref={animateRef} className="flex flex-col gap-3">
       {meetings.data.map((meeting) => (
         <MeetingItem key={meeting.id} meeting={meeting} />
       ))}

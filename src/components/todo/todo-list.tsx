@@ -3,8 +3,28 @@
 import Image from "next/image";
 import { useTodos } from "~/hooks";
 import { TodoItem } from "./todo-item";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import autoAnimate from "@formkit/auto-animate";
+import { type API } from "~/server/api";
+
+const List = ({ todos }: { todos: API["todo"]["find"] }) => {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (listRef.current) {
+      autoAnimate(listRef.current);
+    }
+  }, [listRef]);
+
+  return (
+    <div ref={listRef} className="flex flex-col gap-1.5 overflow-hidden">
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} />
+      ))}
+    </div>
+  );
+};
 
 export const TodoList = () => {
   const todos = useTodos();
@@ -16,6 +36,8 @@ export const TodoList = () => {
   const completedTodos = useMemo(() => {
     return todos.data.filter((todo) => todo.completed);
   }, [todos.data]);
+
+  const listRef = useRef<HTMLDivElement>(null);
 
   const renderTodos = (t: typeof todos.data) => {
     if (t.length === 0) {
@@ -32,14 +54,14 @@ export const TodoList = () => {
       );
     }
 
-    return (
-      <div className="flex flex-col gap-1.5">
-        {t.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
-        ))}
-      </div>
-    );
+    return <List todos={t} />;
   };
+
+  useEffect(() => {
+    if (listRef.current) {
+      autoAnimate(listRef.current);
+    }
+  }, [listRef]);
 
   return (
     <div className="flex flex-col gap-1.5 overflow-y-auto scrollbar scrollbar-track-background scrollbar-thumb-muted-foreground">

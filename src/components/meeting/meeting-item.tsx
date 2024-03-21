@@ -10,7 +10,13 @@ import {
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { Button } from "../ui";
-import { Ellipsis, MessageSquareText, Trash, Sparkles } from "lucide-react";
+import {
+  Ellipsis,
+  MessageSquareText,
+  Trash,
+  Sparkles,
+  Loader2,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +29,6 @@ import { useParams } from "next/navigation";
 import { SelectGeneratedTodosDialog } from "../todo";
 import { useAtom } from "jotai";
 import { generatedTodosAtom } from "~/atoms";
-import { Skeleton } from "../ui/skeleton";
 import { DeleteMeetingDialog } from ".";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -42,19 +47,6 @@ export const MeetingItem = ({
   const dialogueId = params.dialogueId as string;
   const generateTodosMutation = useGenerateTodos();
   const notes = useNotes({ meetingId: meeting.id });
-
-  if (generateTodosMutation.isPending) {
-    return (
-      <div className="rounded border bg-secondary/25">
-        <div className="flex cursor-pointer select-none items-center gap-3 p-3 hover:bg-secondary/75">
-          <Skeleton className="h-5 w-5 rounded-full" />
-          <div className="flex-1">
-            <Skeleton className="h-4" />
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <Collapsible
@@ -91,12 +83,17 @@ export const MeetingItem = ({
                     <Ellipsis className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="bottom" align="end">
+                <DropdownMenuContent
+                  side="bottom"
+                  align="end"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
                   <SelectGeneratedTodosDialog dialogueId={dialogueId} />
                   <DropdownMenuItem
                     disabled={generateTodosMutation.isPending}
-                    onClick={async (e) => {
-                      e.stopPropagation();
+                    onClick={async () => {
                       const todos = await generateTodosMutation.mutateAsync({
                         dialogueId,
                         meetings: [
@@ -116,6 +113,9 @@ export const MeetingItem = ({
                   >
                     <Sparkles className="mr-2 h-4 w-4" />
                     Generate todos
+                    {generateTodosMutation.isPending && (
+                      <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                    )}
                   </DropdownMenuItem>
                   <DeleteMeetingDialog
                     meetingId={meeting.id}

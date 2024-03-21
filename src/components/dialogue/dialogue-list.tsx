@@ -18,22 +18,14 @@ export const DialogueList = ({
       autoAnimate(animateRef.current);
     }
   }, [animateRef]);
-
-  return (
-    <div
-      ref={animateRef}
-      className={cn("flex flex-col gap-3", className)}
-      {...props}
-    >
-      {dialogues.data.map((dialogue) => (
-        <DialogueItem key={dialogue.id} dialogue={dialogue} />
-      ))}
-    </div>
-  );
-};
+  
   if(dialogues.data.length > 0) {
     return (
-      <div ref={ref} className={cn("flex flex-col gap-3", className)}>
+      <div
+        ref={animateRef}
+        className={cn("flex flex-col gap-3", className)}
+        {...props}
+      >
         {dialogues.data.map((dialogue) => (
           <DialogueItem key={dialogue.id} dialogue={dialogue} />
         ))}
@@ -42,6 +34,6 @@ export const DialogueList = ({
   }
 
   return null;
-});
+};
 
 DialogueList.displayName = "DialogueList";

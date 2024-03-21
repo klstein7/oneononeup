@@ -93,7 +93,8 @@ export const MeetingItem = ({
                   <SelectGeneratedTodosDialog dialogueId={dialogueId} />
                   <DropdownMenuItem
                     disabled={generateTodosMutation.isPending}
-                    onClick={async () => {
+                    onClick={async (e) => {
+                      e.preventDefault();
                       const todos = await generateTodosMutation.mutateAsync({
                         dialogueId,
                         meetings: [
